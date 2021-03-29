@@ -1,1 +1,11 @@
 
+Create RSA Private Key
+openssl genrsa -des3 -passout pass:pass -out server.pass.key 2048
+openssl rsa -passin pass:pass -in server.pass.key -out server.key
+$ rm server.pass.key
+openssl req -new -key server.key -out server.csr
+
+ openssl x509 -req -sha256 -extfile v3.ext -days 365 -in server.csr -signkey server.key -out server.crt
+ 
+ openssl pkcs12 -export -name servercert -in server.crt -inkey server.key -out myp12keystore.p12
+ keytool -importkeystore -destkeystore mykeystore.jks -srckeystore myp12keystore.p12 -srcstoretype pkcs12 -alias servercert
